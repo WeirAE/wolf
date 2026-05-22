@@ -1,0 +1,49 @@
+# wolf/data/backends.yaml
+backends:
+
+  ecflow:
+    display_name: "ECFlow"
+    compile_adapter: "wolf.adapters.ecflow:ECFlowCompiler"
+    runtime_adapter: "wolf.adapters.ecflow_runtime:ECFlowRuntime"
+    availability_probes:
+      cli:          ["ecflow_client", "--version"]   # exit 0 = available
+      python_pkg:   "ecflow"                         # importable = enhanced
+    install_hints:
+      spack:        "ecflow@5.8.0 +python"
+      lmod:         "ecflow/5.8.0"
+      conda_forge:  "ecflow"
+    cli_operations:
+      load:         ["ecflow_client", "--load", "{suite_def}"]
+      begin:        ["ecflow_client", "--begin", "{suite_name}"]
+      status:       ["ecflow_client", "--get_state", "/{suite_name}"]
+
+  cylc:
+    display_name: "Cylc 8"
+    compile_adapter: "wolf.adapters.cylc:CylcCompiler"
+    runtime_adapter: "wolf.adapters.cylc_runtime:CylcRuntime"
+    availability_probes:
+      cli:          ["cylc", "--version"]
+      python_pkg:   "cylc.flow"
+    install_hints:
+      spack:        "py-cylc-flow@8"
+      lmod:         "cylc/8.0.0"
+      conda_forge:  "cylc-flow"
+    cli_operations:
+      validate:     ["cylc", "validate", "{workflow_dir}"]
+      install:      ["cylc", "install", "{workflow_dir}"]
+      play:         ["cylc", "play", "{suite_name}"]
+
+  rocoto:
+    display_name: "Rocoto"
+    compile_adapter: "wolf.adapters.rocoto:RocotoCompiler"
+    runtime_adapter: "wolf.adapters.rocoto_runtime:RocotoRuntime"
+    availability_probes:
+      cli:          ["rocotorun", "--help"]
+      python_pkg:   null                             # no Python API exists
+    install_hints:
+      spack:        "rocoto"
+      lmod:         "rocoto/1.3.6"
+      conda_forge:  null                             # not on conda-forge
+    cli_operations:
+      run:          ["rocotorun", "-w", "{workflow_xml}", "-d", "{db_file}"]
+      status:       ["rocotostat", "-w", "{workflow_xml}", "-d", "{db_file}"]
