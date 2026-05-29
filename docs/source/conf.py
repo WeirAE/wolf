@@ -22,8 +22,6 @@ nitpick_ignore_regex = {("py:class", ".*")}  # comment out to see types Sphinx c
 numfig = True
 numfig_format = {"figure": "Figure %s"}
 project = "WOLF"
-release = _metadata["version"]
-version = _metadata["version"]
 
 extlinks = {
     "anaconda": ("https://www.anaconda.com/%s", "%s"),
