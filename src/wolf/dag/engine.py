@@ -33,9 +33,7 @@ class DAGBuilder:
         # Map config_id → config_dict
         self.config_map = {t["id"]: t for t in config}
 
-
     # Private methods
-
     def _build_queue(self):
         topological_sorter = TopologicalSorter()
         task_queue = mp.Queue()
@@ -45,8 +43,8 @@ class DAGBuilder:
 
         def _run_task_in_process(taskcmd, node, finalized_task_queue):
             """
-            Task executor. Fire off the command in a subprocess and wait for it to
-            finish. Once done, put a receipt on the queue.
+            Task executor. Fire off the command in a subprocess and wait
+            for it to finish. Once done, put a receipt on the queue.
             """
             subprocess.check_call(taskcmd, shell=True)
             finalized_task_queue.put(node)
@@ -61,7 +59,9 @@ class DAGBuilder:
                 for node in topological_sorter.get_ready():
                     process = mp.Process(
                         target=_run_task_in_process,
-                        args=(self.config_map["command"], node, finalized_task_queue),
+                        args=(
+                            self.config_map["command"],
+                            node, finalized_task_queue),
                     )
                     process.start()
                     running_processes[node] = process

@@ -13,6 +13,7 @@ Rings in use per command:
 
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 import sys
@@ -25,8 +26,6 @@ _log = logging.getLogger(__name__)
 # CLI framework — argparse (Ring 1) only
 # Click is Ring 2; we avoid it here so the CLI is available everywhere.
 # ---------------------------------------------------------------------------
-
-import argparse
 
 
 def _base_parser() -> argparse.ArgumentParser:
@@ -48,21 +47,25 @@ def main(argv: list[str] | None = None) -> None:
     p_val.add_argument("-c", "--config", required=True, type=Path)
     p_val.add_argument("--strict", action="store_true")
     p_val.add_argument("--report", choices=["text", "json"], default="text")
-    p_val.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_val.add_argument(
+        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf compile
-    p_cmp = sub.add_parser("compile", help="Compile YAML to backend definition files")
+    p_cmp = sub.add_parser(
+        "compile", help="Compile YAML to backend definition files")
     p_cmp.add_argument("-c", "--config", required=True, type=Path)
     p_cmp.add_argument("-b", "--backend", default=None)
     p_cmp.add_argument("-o", "--out", type=Path, default=Path("./wolf_out"))
-    p_cmp.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_cmp.add_argument(
+        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf inspect
     p_ins = sub.add_parser("inspect", help="Visualise the workflow DAG")
     p_ins.add_argument("-c", "--config", required=True, type=Path)
     p_ins.add_argument("--format", choices=["ascii", "dot"], default="ascii")
     p_ins.add_argument("--critical-path", action="store_true")
-    p_ins.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_ins.add_argument(
+        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf lint
     p_lnt = sub.add_parser("lint", help="Static analysis on workflow scripts")
@@ -70,14 +73,17 @@ def main(argv: list[str] | None = None) -> None:
     p_lnt.add_argument("--lang", default="all")
     p_lnt.add_argument("--report", choices=["text", "json"], default="text")
     p_lnt.add_argument("--script-root", type=Path, default=None)
-    p_lnt.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_lnt.add_argument(
+        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf capabilities
-    p_cap = sub.add_parser("capabilities", help="Probe available backends and ring level")
+    p_cap = sub.add_parser(
+        "capabilities", help="Probe available backends and ring level")
     p_cap.add_argument("--json", action="store_true", dest="as_json")
 
     # wolf build
-    p_bld = sub.add_parser("build", help="Scaffold a new workflow from a template")
+    p_bld = sub.add_parser(
+        "build", help="Scaffold a new workflow from a template")
     p_bld.add_argument("-t", "--template", required=True)
     p_bld.add_argument("-b", "--backend", required=True)
     p_bld.add_argument("-o", "--out", type=Path, default=Path("workflow.yaml"))
@@ -174,7 +180,8 @@ def _cmd_compile(args: argparse.Namespace) -> None:
         dest.write_text(content, encoding="utf-8")
         print(f"  wrote  {dest}")
 
-    print(f"\n✓ Compiled '{cfg.meta.name}' → {args.out} ({len(artefacts)} files)")
+    print(
+        f"\n✓ Compiled '{cfg.meta.name}' → {args.out} ({len(artefacts)} files)")
 
 
 def _cmd_inspect(args: argparse.Namespace) -> None:
@@ -282,7 +289,8 @@ def _parse_vars(raw: list[str]) -> dict[str, str]:
     result: dict[str, str] = {}
     for item in raw:
         if "=" not in item:
-            _log.warning("Ignoring malformed --var %r (expected KEY=VALUE)", item)
+            _log.warning(
+                "Ignoring malformed --var %r (expected KEY=VALUE)", item)
             continue
         k, _, v = item.partition("=")
         result[k.strip()] = v.strip()

@@ -576,7 +576,8 @@ def main() -> None:
     print(DotExporter(graph).export())
 
 
-def _demo_rejection(label: str, name: str, script: str, **kwargs: object) -> None:
+def _demo_rejection(
+        label: str, name: str, script: str, **kwargs: object) -> None:
     """Attempt to construct an invalid Task and confirm rejection.
 
     Args:

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 
+
 def main() -> None:
     """
     Main entry point.
@@ -36,7 +37,7 @@ def main() -> None:
         required=True,
         type=str,
     )
-    
+
     validate = subparsers.add_parser('validate', help='Validate')
     validate.add_argument(
         '--config',
