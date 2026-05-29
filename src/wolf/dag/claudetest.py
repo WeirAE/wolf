@@ -62,11 +62,9 @@ _NAME_PATTERN: re.Pattern[str] = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]{0,63}$")
 # Script paths: standard Unix path characters only.
 # Explicitly excludes shell metacharacters: space " ' ` ; $ | & > < ( ) \
 # Max 255 chars matches POSIX PATH_MAX for a single component.
-_SCRIPT_PATH_PATTERN: re.Pattern[str] = re.compile(
-    r"^[a-zA-Z0-9_./:@\-]{1,255}$"
-)
+_SCRIPT_PATH_PATTERN: re.Pattern[str] = re.compile(r"^[a-zA-Z0-9_./:@\-]{1,255}$")
 
-_MAX_WALLTIME_S: int = 604_800     # 7 days — hard upper bound
+_MAX_WALLTIME_S: int = 604_800  # 7 days — hard upper bound
 _MIN_WALLTIME_S: int = 1
 _MAX_NODES: int = 100_000
 _MIN_NODES: int = 1
@@ -295,9 +293,7 @@ class WorkflowGraph:
             WorkflowValidationError: If a task with the same name already exists.
         """
         if task.name in self._tasks:
-            raise WorkflowValidationError(
-                f"Duplicate task name: '{task.name}'"
-            )
+            raise WorkflowValidationError(f"Duplicate task name: '{task.name}'")
         self._tasks[task.name] = task
         self._adjacency[task.name] = set(task.depends_on)
 
@@ -338,9 +334,7 @@ class WorkflowGraph:
             while ts.is_active():
                 ts.done(*ts.get_ready())
         except graphlib.CycleError as exc:
-            raise WorkflowCycleError(
-                f"Dependency cycle detected: {exc}"
-            ) from exc
+            raise WorkflowCycleError(f"Dependency cycle detected: {exc}") from exc
 
     # ------------------------------------------------------------------
     # Ordering
@@ -522,18 +516,55 @@ def _build_nwp_example() -> WorkflowGraph:
         A validated WorkflowGraph modelling a 7-task NWP cycle.
     """
     graph = WorkflowGraph()
-    graph.add_task(Task("prep_obs",     "scripts/prep_obs.sh",  walltime_s=1800, nodes=4))
-    graph.add_task(Task("prep_bkg",     "scripts/prep_bkg.sh",  walltime_s=900,  nodes=2))
-    graph.add_task(Task("enkf",         "scripts/enkf.py",
-                        depends_on=("prep_obs", "prep_bkg"),    walltime_s=3600, nodes=80,  mpi=True))
-    graph.add_task(Task("post_enkf",    "scripts/post_enkf.sh",
-                        depends_on=("enkf",),                   walltime_s=600,  nodes=2))
-    graph.add_task(Task("forecast",     "bin/forecast.x",
-                        depends_on=("enkf",),                   walltime_s=7200, nodes=240, mpi=True))
-    graph.add_task(Task("post_proc",    "scripts/post.sh",
-                        depends_on=("forecast",),               walltime_s=2700, nodes=8))
-    graph.add_task(Task("verification", "scripts/verify.py",
-                        depends_on=("post_enkf", "post_proc"),  walltime_s=900,  nodes=4))
+    graph.add_task(Task("prep_obs", "scripts/prep_obs.sh", walltime_s=1800, nodes=4))
+    graph.add_task(Task("prep_bkg", "scripts/prep_bkg.sh", walltime_s=900, nodes=2))
+    graph.add_task(
+        Task(
+            "enkf",
+            "scripts/enkf.py",
+            depends_on=("prep_obs", "prep_bkg"),
+            walltime_s=3600,
+            nodes=80,
+            mpi=True,
+        )
+    )
+    graph.add_task(
+        Task(
+            "post_enkf",
+            "scripts/post_enkf.sh",
+            depends_on=("enkf",),
+            walltime_s=600,
+            nodes=2,
+        )
+    )
+    graph.add_task(
+        Task(
+            "forecast",
+            "bin/forecast.x",
+            depends_on=("enkf",),
+            walltime_s=7200,
+            nodes=240,
+            mpi=True,
+        )
+    )
+    graph.add_task(
+        Task(
+            "post_proc",
+            "scripts/post.sh",
+            depends_on=("forecast",),
+            walltime_s=2700,
+            nodes=8,
+        )
+    )
+    graph.add_task(
+        Task(
+            "verification",
+            "scripts/verify.py",
+            depends_on=("post_enkf", "post_proc"),
+            walltime_s=900,
+            nodes=4,
+        )
+    )
     graph.validate()
     return graph
 
@@ -565,19 +596,18 @@ def main() -> None:
         print(f"  ✓ Caught cycle: {exc}")
 
     print("\n── Trust Boundary — Injection Attempts Rejected ─")
-    _demo_rejection('name with spaces',  "task a", "run.sh")
-    _demo_rejection('shell metachar $',  "task_$USER", "run.sh")
-    _demo_rejection('DOT injection',     'bad"; color=red; //', "run.sh")
-    _demo_rejection('shell in script',   "task_x", "run.sh; rm -rf /")
-    _demo_rejection('negative walltime', "task_y", "run.sh", walltime_s=-1)
-    _demo_rejection('zero nodes',        "task_z", "run.sh", nodes=0)
+    _demo_rejection("name with spaces", "task a", "run.sh")
+    _demo_rejection("shell metachar $", "task_$USER", "run.sh")
+    _demo_rejection("DOT injection", 'bad"; color=red; //', "run.sh")
+    _demo_rejection("shell in script", "task_x", "run.sh; rm -rf /")
+    _demo_rejection("negative walltime", "task_y", "run.sh", walltime_s=-1)
+    _demo_rejection("zero nodes", "task_z", "run.sh", nodes=0)
 
     print("\n── Graphviz DOT (pipe to: dot -Tsvg) ───────────")
     print(DotExporter(graph).export())
 
 
-def _demo_rejection(
-        label: str, name: str, script: str, **kwargs: object) -> None:
+def _demo_rejection(label: str, name: str, script: str, **kwargs: object) -> None:
     """Attempt to construct an invalid Task and confirm rejection.
 
     Args:

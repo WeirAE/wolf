@@ -47,25 +47,21 @@ def main(argv: list[str] | None = None) -> None:
     p_val.add_argument("-c", "--config", required=True, type=Path)
     p_val.add_argument("--strict", action="store_true")
     p_val.add_argument("--report", choices=["text", "json"], default="text")
-    p_val.add_argument(
-        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_val.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf compile
-    p_cmp = sub.add_parser(
-        "compile", help="Compile YAML to backend definition files")
+    p_cmp = sub.add_parser("compile", help="Compile YAML to backend definition files")
     p_cmp.add_argument("-c", "--config", required=True, type=Path)
     p_cmp.add_argument("-b", "--backend", default=None)
     p_cmp.add_argument("-o", "--out", type=Path, default=Path("./wolf_out"))
-    p_cmp.add_argument(
-        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_cmp.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf inspect
     p_ins = sub.add_parser("inspect", help="Visualise the workflow DAG")
     p_ins.add_argument("-c", "--config", required=True, type=Path)
     p_ins.add_argument("--format", choices=["ascii", "dot"], default="ascii")
     p_ins.add_argument("--critical-path", action="store_true")
-    p_ins.add_argument(
-        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_ins.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf lint
     p_lnt = sub.add_parser("lint", help="Static analysis on workflow scripts")
@@ -73,17 +69,16 @@ def main(argv: list[str] | None = None) -> None:
     p_lnt.add_argument("--lang", default="all")
     p_lnt.add_argument("--report", choices=["text", "json"], default="text")
     p_lnt.add_argument("--script-root", type=Path, default=None)
-    p_lnt.add_argument(
-        "-v", "--var", action="append", default=[], metavar="KEY=VALUE")
+    p_lnt.add_argument("-v", "--var", action="append", default=[], metavar="KEY=VALUE")
 
     # wolf capabilities
     p_cap = sub.add_parser(
-        "capabilities", help="Probe available backends and ring level")
+        "capabilities", help="Probe available backends and ring level"
+    )
     p_cap.add_argument("--json", action="store_true", dest="as_json")
 
     # wolf build
-    p_bld = sub.add_parser(
-        "build", help="Scaffold a new workflow from a template")
+    p_bld = sub.add_parser("build", help="Scaffold a new workflow from a template")
     p_bld.add_argument("-t", "--template", required=True)
     p_bld.add_argument("-b", "--backend", required=True)
     p_bld.add_argument("-o", "--out", type=Path, default=Path("workflow.yaml"))
@@ -92,12 +87,12 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     dispatch = {
-        "validate":     _cmd_validate,
-        "compile":      _cmd_compile,
-        "inspect":      _cmd_inspect,
-        "lint":         _cmd_lint,
+        "validate": _cmd_validate,
+        "compile": _cmd_compile,
+        "inspect": _cmd_inspect,
+        "lint": _cmd_lint,
         "capabilities": _cmd_capabilities,
-        "build":        _cmd_build,
+        "build": _cmd_build,
     }
 
     if args.command is None:
@@ -118,6 +113,7 @@ def main(argv: list[str] | None = None) -> None:
 # ---------------------------------------------------------------------------
 # Command handlers
 # ---------------------------------------------------------------------------
+
 
 def _cmd_validate(args: argparse.Namespace) -> None:
     from wolf.schema import WorkflowConfig
@@ -154,18 +150,31 @@ def _cmd_compile(args: argparse.Namespace) -> None:
     if args.backend:
         # shallow backend override — rebuild meta with different backend
         d = {
-            "meta": {**{"name": cfg.meta.name, "backend": args.backend,
-                        "version": cfg.meta.version, "owner": cfg.meta.owner}},
+            "meta": {
+                **{
+                    "name": cfg.meta.name,
+                    "backend": args.backend,
+                    "version": cfg.meta.version,
+                    "owner": cfg.meta.owner,
+                }
+            },
             "environment": {
                 "modules": cfg.environment.modules,
                 "vars": cfg.environment.vars,
                 "shell": cfg.environment.shell,
             },
-            "workflow": {"tasks": {
-                n: {"script": str(t.script), "depends_on": list(t.depends_on),
-                    "walltime_s": t.walltime_s, "nodes": t.nodes, "mpi": t.mpi}
-                for n, t in cfg.tasks.items()
-            }},
+            "workflow": {
+                "tasks": {
+                    n: {
+                        "script": str(t.script),
+                        "depends_on": list(t.depends_on),
+                        "walltime_s": t.walltime_s,
+                        "nodes": t.nodes,
+                        "mpi": t.mpi,
+                    }
+                    for n, t in cfg.tasks.items()
+                }
+            },
         }
         cfg = WorkflowConfig.from_dict(d)
 
@@ -180,8 +189,7 @@ def _cmd_compile(args: argparse.Namespace) -> None:
         dest.write_text(content, encoding="utf-8")
         print(f"  wrote  {dest}")
 
-    print(
-        f"\n✓ Compiled '{cfg.meta.name}' → {args.out} ({len(artefacts)} files)")
+    print(f"\n✓ Compiled '{cfg.meta.name}' → {args.out} ({len(artefacts)} files)")
 
 
 def _cmd_inspect(args: argparse.Namespace) -> None:
@@ -250,8 +258,7 @@ def _cmd_build(args: argparse.Namespace) -> None:
     tmpl = get_template(args.template)
     if tmpl is None:
         print(
-            f"Unknown template '{args.template}'. "
-            f"Available: {list_templates()}",
+            f"Unknown template '{args.template}'. Available: {list_templates()}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -261,7 +268,9 @@ def _cmd_build(args: argparse.Namespace) -> None:
         filled: dict[str, str] = {}
         for var_name, meta in tmpl.required_vars.items():
             default = meta.get("default", "")
-            prompt = f"  {var_name} [{meta.get('description', '')}] (default: {default}): "
+            prompt = (
+                f"  {var_name} [{meta.get('description', '')}] (default: {default}): "
+            )
             value = input(prompt).strip() or default
             filled[var_name] = value
     else:
@@ -277,6 +286,7 @@ def _cmd_build(args: argparse.Namespace) -> None:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _parse_vars(raw: list[str]) -> dict[str, str]:
     """Parse KEY=VALUE pairs from CLI --var arguments.
 
@@ -289,8 +299,7 @@ def _parse_vars(raw: list[str]) -> dict[str, str]:
     result: dict[str, str] = {}
     for item in raw:
         if "=" not in item:
-            _log.warning(
-                "Ignoring malformed --var %r (expected KEY=VALUE)", item)
+            _log.warning("Ignoring malformed --var %r (expected KEY=VALUE)", item)
             continue
         k, _, v = item.partition("=")
         result[k.strip()] = v.strip()
@@ -312,6 +321,7 @@ def _emit(data: dict[str, Any], fmt: str) -> None:
 def _wolf_version() -> str:
     try:
         from wolf import __version__
+
         return f"wolf {__version__}"
     except ImportError:
         return "wolf (dev)"

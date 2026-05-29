@@ -59,9 +59,7 @@ class DAGBuilder:
                 for node in topological_sorter.get_ready():
                     process = mp.Process(
                         target=_run_task_in_process,
-                        args=(
-                            self.config_map["command"],
-                            node, finalized_task_queue),
+                        args=(self.config_map["command"], node, finalized_task_queue),
                     )
                     process.start()
                     running_processes[node] = process

@@ -17,7 +17,7 @@ class BaseAdapter(ABC):
 
     @abstractmethod
     def translate(self):
-        return[]
+        return []
 
     def validate(self):
-        return[]
+        return []

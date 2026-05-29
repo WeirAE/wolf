@@ -8,14 +8,17 @@ sys.path.insert(0, os.path.abspath("../src"))
 
 autoclass_content = "both"
 autodoc_mock_imports = [
-    "dateutil", "f90nml", "iotaa", "jsonschema", "lxml", "referencing"
-    ]
+    "dateutil",
+    "f90nml",
+    "iotaa",
+    "jsonschema",
+    "lxml",
+    "referencing",
+]
 autodoc_typehints = "description"
 copyright = str(dt.datetime.now().year)
 exclude_patterns = ["**/shared/*.rst"]
-extensions = [
-    "sphinx.ext.autodoc", "sphinx.ext.extlinks", "sphinx.ext.intersphinx"
-    ]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.extlinks", "sphinx.ext.intersphinx"]
 extlinks_detect_hardcoded_links = True
 html_logo = os.path.join("static", "ufs.png")
 html_static_path = ["static"]
@@ -36,13 +39,13 @@ extlinks = {
     "docformatter": ("https://docformatter.readthedocs.io/en/stable/%s", "%s"),
     "fre-nctools": (
         "https://github.com/NOAA-GFDL/FRE-NCtools/blob/main/src/make-hgrid/%s",
-        "%s"),
+        "%s",
+    ),
     "github-docs": ("https://docs.github.com/en/%s", "%s"),
     "jinja2": ("https://jinja.palletsprojects.com/%s", "%s"),
     "jq": ("https://jqlang.github.io/jq/manual/v1.7/%s", "%s"),
     "json-schema": ("https://json-schema.org/%s", "%s"),
-    "miniconda": (
-        "https://docs.conda.io/projects/miniconda/en/latest/%s", "%s"),
+    "miniconda": ("https://docs.conda.io/projects/miniconda/en/latest/%s", "%s"),
     "miniforge": ("https://github.com/conda-forge/miniforge/%s", "%s"),
     "mypy": ("https://mypy.readthedocs.io/en/stable/%s", "%s"),
     "noaa": ("https://www.noaa.gov/%s", "%s"),
@@ -50,16 +53,17 @@ extlinks = {
     "python": ("https://docs.python.org/3/library/%s", "%s"),
     "rocoto": ("https://noaa-gsl.github.io/rocoto/%s", "%s"),
     "ruff": ("https://docs.astral.sh/ruff/%s", "%s"),
-    "rst": (
-        "https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s",
-        "%s"),
+    "rst": ("https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s", "%s"),
     "rtd": ("https://readthedocs.org/projects/uwtools/%s", "%s"),
     "ufs": ("https://ufs.epic.noaa.gov/%s", "%s"),
     "ufs-utils": (
         "https://noaa-emcufs-utils.readthedocs.io/en/latest/ufs_utils.html#%s",
-        "%s"),
+        "%s",
+    ),
     "ufs-weather-model": (
-        "https://github.com/ufs-community/ufs-weather-model/%s", "%s"),
+        "https://github.com/ufs-community/ufs-weather-model/%s",
+        "%s",
+    ),
 }
 
 

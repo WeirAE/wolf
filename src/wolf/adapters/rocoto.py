@@ -1,6 +1,8 @@
 from __future__ import annotations
 from pathlib import Path
 from wolf.adapters.base import BaseAdapter
+from wolf.schema.workflow import WorkflowConfig
+from wolf.dag.engine import DAGBuilder as WolfDAG
 
 
 class RocotoAdapter(BaseAdapter):
