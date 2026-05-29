@@ -1,3 +1,4 @@
+# WOLF
 ```
                              .d$$b
                            .' TO$;\
@@ -21,3 +22,8 @@
  ..--""--.-"         (\      .-(\ 
    ..--""              `-\(\/;`
 ```
+## Documentation
+
+Comprehensive documentation is available for:
+
+* [The latest release](https://wolf-orchestration.readthedocs.io/en/stable/)
