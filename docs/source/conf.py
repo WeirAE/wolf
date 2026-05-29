@@ -7,9 +7,6 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-with open("../recipe/meta.json", "r", encoding="utf-8") as f:
-    _metadata = json.loads(f.read())
-
 autoclass_content = "both"
 autodoc_mock_imports = ["dateutil", "f90nml", "iotaa", "jsonschema", "lxml", "referencing"]
 autodoc_typehints = "description"
@@ -24,7 +21,7 @@ intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 nitpick_ignore_regex = {("py:class", ".*")}  # comment out to see types Sphinx can't create links to
 numfig = True
 numfig_format = {"figure": "Figure %s"}
-project = "Unified Workflow Tools"
+project = "WOLF"
 release = _metadata["version"]
 version = _metadata["version"]
 
