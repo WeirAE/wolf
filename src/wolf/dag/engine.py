@@ -11,7 +11,7 @@ import multiprocessing as mp
 import subprocess
 
 from graphlib import TopologicalSorter, CycleError
-from typing import List, Dict, Any
+from typing import Dict, Any
 # from wolf.schema.workflow import WorkflowConfig, TaskConfig
 
 
@@ -27,7 +27,7 @@ class DAGBuilder:
         - any other metadata needed by executors
     """
 
-    def __init__(self, config: List[Dict[str, Any]]):
+    def __init__(self, config: Dict[str, Any]):
         self.config = config
 
         # Map config_id → config_dict
@@ -46,12 +46,19 @@ class DAGBuilder:
             Task executor. Fire off the command in a subprocess and wait
             for it to finish. Once done, put a receipt on the queue.
             """
-            subprocess.check_call(taskcmd, shell=True)
+            if isinstance(taskcmd, list):
+                subprocess.check_call(taskcmd)
+            else:
+                # Only use shell=True if taskcmd is a trusted string
+                subprocess.check_call(taskcmd, shell=True)
             finalized_task_queue.put(node)
 
         # add the nodes in the graph to the topological sorter
         for node, parents in self.config.items():
-            topological_sorter.add(node, frozenset(parents))
+            if parents is None:
+                topological_sorter.add(node, frozenset())
+            else:
+                topological_sorter.add(node, frozenset(parents))
         try:
             # mark the graph as finished and check for cycles in the graph
             topological_sorter.prepare()
@@ -59,7 +66,7 @@ class DAGBuilder:
                 for node in topological_sorter.get_ready():
                     process = mp.Process(
                         target=_run_task_in_process,
-                        args=(self.config_map["command"], node, finalized_task_queue),
+                        args=(self.config_map[node]["command"], node, finalized_task_queue),
                     )
                     process.start()
                     running_processes[node] = process
@@ -68,5 +75,6 @@ class DAGBuilder:
                 node = finalized_task_queue.get()
                 running_processes.pop(node).join()
                 topological_sorter.done(node)
-        except CycleError:
+        except CycleError as e:
             print("Error: graph contains a cycle and is not a DAG")
+            raise e
