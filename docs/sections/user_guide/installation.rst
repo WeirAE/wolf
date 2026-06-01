@@ -8,13 +8,13 @@ To install ``WOLF`` using a unified Spack environment on a NOAA RDHPCS tier 1 pl
 
 #. Identify the current environment by running the following command:
 
-   .. code-block:: bash
+   .. code-block:: console
 
       spack env active
 
 #. Install the ``WOLF`` module by running the following command:
 
-   .. code-block:: bash
+   .. code-block:: console
 
       module load wolf
 
@@ -25,21 +25,21 @@ To install ``WOLF`` using a standalone Spack environment:
 
 #. Clone spack-stack locally from GitHub:
 
-    .. code-block:: bash
-    
-        git clone -b https://github.com/JCSDA/spack-stack
+   .. code-block:: console
+
+      git clone -b https://github.com/JCSDA/spack-stack
 
 # Create a spack environment for ``WOLF``
 
-    .. code-block:: bash
-
-        spack env create -d wolf
+   .. code-block:: console
+        
+      spack env create -d wolf
 
 # Add ``WOLF`` to the environment
 
-    .. code-block:: bash
+   .. code-block:: console
 
-        spack env add wolf
+      spack env add wolf
 
 Build ``WOLF`` Locally
 ----------------------
@@ -48,13 +48,13 @@ To build ``WOLF`` locally::
 
 #. Clone ``WOLF`` locally from GitHub:
 
-    .. code-block:: bash
-    
-        git clone -b https://github.com/WeirAE/wolf
+   .. code-block:: console
+
+      git clone -b https://github.com/WeirAE/wolf
 
 #. Build ``WOLF`` using the provided Makefile:
 
-    .. code-block:: bash
+   .. code-block:: console
 
-        cd wolf
-        make -j 4
+      cd wolf
+      make -j 4

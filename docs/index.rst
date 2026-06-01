@@ -12,19 +12,20 @@ The Workflow Orchestration Layer Fabric, ``WOLF``, is a modern, open-source Pyth
 
 Architecture
 ============
-core -- stdlib-only workflow engine, using graphlib for DAG management
-baseline -- jinja, yaml and json for configuration management and templating
-extensions -- optional dependencies for specific backends and features, e.g. ecflow, dask, etc.
-adapters -- strategy pattern implementations for various tool integrations, e.g. UWTools, WXFlow, etc
+* core -- stdlib-only workflow engine, using graphlib for DAG management
+* baseline -- jinja, yaml and json for configuration management and templating
+* extensions -- optional dependencies for specific backends and features, e.g. ecflow, dask, etc.
+* adapters -- strategy pattern implementations for various tool integrations, e.g. UWTools, WXFlow, etc
 
 Quick Start
 ===========
 
-    .. code-block:: bash
-        wolf validate --config workflow.yaml
-        wolf compile  --config workflow.yaml --backend ecflow --out ./out
-        wolf inspect  --config workflow.yaml --critical-path
-        wolf lint     --config workflow.yaml
-        wolf capabilities
+.. code-block:: console
+
+   wolf validate --config workflow.yaml
+   wolf compile  --config workflow.yaml --backend ecflow --out ./out
+   wolf inspect  --config workflow.yaml --critical-path
+   wolf lint     --config workflow.yaml
+   wolf capabilities
 
 WOLF hosts its documentation on Read the Docs.
