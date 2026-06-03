@@ -6,14 +6,26 @@ from wolf.dag.engine import DAGBuilder as WolfDAG
 
 
 class RocotoAdapter(BaseAdapter):
+    """
+    placeholder adapter for Rocoto
+    """
     name = "rocoto"
 
     def translate(self, dag: "WolfDAG", config: "WorkflowConfig") -> dict[str, str]:
+        """
+        placeholder template translator
+        """
         root = self._realize(dag, config)
         return {"workflow.xml": root}
 
-    def _validate(xml_file: Path | None) -> bool:
-        pass
+    def _validate(self, xml_file: Path | None) -> bool:
+        """
+        placeholder template validator
+        """
+        return xml_file
 
-    def _realize(config: "WorkflowConfig") -> str:
-        pass
+    def _realize(self, dag, config: "WorkflowConfig") -> str:
+        """
+        placeholder template realization
+        """
+        return config

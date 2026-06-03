@@ -23,7 +23,7 @@ Create a Standalone Spack Environment
 
 To install ``WOLF`` using a standalone Spack environment:
 
-#. Clone spack-stack locally from GitHub:
+# Clone spack-stack locally from GitHub:
 
    .. code-block:: console
 

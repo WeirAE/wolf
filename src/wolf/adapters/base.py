@@ -6,18 +6,26 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from wolf.dag.engine import WorkflowDAG
+from wolf.dag.engine import DAGBuilder
 from wolf.schema.workflow import WorkflowConfig
 
 
 class BaseAdapter(ABC):
-    def __init__(self, config: WorkflowConfig, dag: WorkflowDAG) -> None:
+    """
+    placeholder base adapter
+    """
+    def __init__(self, config: WorkflowConfig, dag: DAGBuilder) -> None:
         self.config = config
         self.dag = dag
 
     @abstractmethod
-    def translate(self):
+    def translate(self, dag, config):
         return []
 
-    def validate(self):
+    @abstractmethod
+    def realize(self, dag, config):
+        return []
+
+    @abstractmethod
+    def validate(self, xml_file):
         return []
