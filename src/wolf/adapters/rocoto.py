@@ -9,6 +9,7 @@ class RocotoAdapter(BaseAdapter):
     """
     placeholder adapter for Rocoto
     """
+
     name = "rocoto"
 
     def translate(self, dag: "WolfDAG", config: "WorkflowConfig") -> dict[str, str]:

@@ -38,20 +38,6 @@ def main() -> None:
         type=str,
     )
 
-    validate = subparsers.add_parser("validate", help="Validate")
-    validate.add_argument(
-        "--config",
-        help="read config",
-        required=True,
-        type=str,
-    )
-    validate.add_argument(
-        "--template",
-        help="read template",
-        required=True,
-        type=str,
-    )
-
     comp = subparsers.add_parser("compile", help="Compile")
     comp.add_argument(
         "--config",
@@ -72,6 +58,18 @@ def main() -> None:
         type=str,
     )
 
+    inspect = subparsers.add_parser("inspect", help="Inspect")
+    inspect.add_argument(
+        "--config",
+        help="read config",
+        required=True,
+        type=str,
+    )
+    inspect.add_argument(
+        "--format",
+        help="target backend",
+    )
+
     lint = subparsers.add_parser("lint", help="Lint")
     lint.add_argument(
         "--config",
@@ -85,16 +83,18 @@ def main() -> None:
         help="target backend",
     )
 
-    inspect = subparsers.add_parser("inspect", help="Inspect")
-    inspect.add_argument(
+    validate = subparsers.add_parser("validate", help="Validate")
+    validate.add_argument(
         "--config",
         help="read config",
         required=True,
         type=str,
     )
-    inspect.add_argument(
-        "--format",
-        help="target backend",
+    validate.add_argument(
+        "--template",
+        help="read template",
+        required=True,
+        type=str,
     )
 
     args = parser.parse_args()

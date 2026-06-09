@@ -14,6 +14,7 @@ class BaseAdapter(ABC):
     """
     placeholder base adapter
     """
+
     def __init__(self, config: WorkflowConfig, dag: DAGBuilder) -> None:
         self.config = config
         self.dag = dag

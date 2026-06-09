@@ -1,0 +1,46 @@
+# wolf/bridges/uwtools.bridge.yaml
+uwtools:
+  operations:
+    run_forecast:
+      invoke:
+        preferred: python_api
+        python_api:
+          module: uwtools.api.forecast
+          function: execute
+        cli_fallback:
+          command: ["uw", "forecast", "run", "--config-file", "{config}"]
+        wolf_fallback: compile_only       # emit files, user runs manually
+      status:
+        method: return_value              # python_api returns success/fail
+        cli_fallback: exit_code
+        file_fallback:
+          pattern: "{run_dir}/forecast.done"
+      error:
+        method: exception
+        cli_fallback: stderr_contains
+        file_fallback:
+          pattern: "{run_dir}/forecast.failed"
+
+# wolf/bridges/da_workflow.bridge.yaml
+da_workflow:
+  operations:
+    run_enkf:
+      invoke:
+        preferred: direct_exec
+        direct_exec:
+          command: ["{script_path}"]
+        wolf_fallback: compile_only
+      status:
+        method: file_poll
+        file_poll:
+          success_pattern: "{wolf_status_dir}/run_enkf.done"
+          poll_interval_s: 30
+          timeout_s: 14400
+      error:
+        method: file_poll
+        file_poll:
+          failure_pattern: "{wolf_status_dir}/run_enkf.failed"
+
+# wolf/bridges/wxflow.bridge.yaml
+# wolf/bridges/pygfs.bridge.yaml
+# wolf/bridges/ufsutils.bridge.yaml
